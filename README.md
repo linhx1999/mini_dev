@@ -202,6 +202,9 @@ Use this script to run the OpenAI model on the Azure cloud. (you may need to adj
 
 ```bash
 cd ./llm/
+export OPENAI_BASE_URL=http://127.0.0.1:8000/v1
+export OPENAI_API_KEY=sk-no-key-required
+export OPENAI_MODEL_NAME=<served-model-name>
 sh ./run/run_gpt.sh
 ```
 

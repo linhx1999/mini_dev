@@ -2,7 +2,8 @@
 import argparse
 import json
 import os
-from openai import AzureOpenAI
+# from openai import AzureOpenAI
+from openai import OpenAI
 from tqdm import tqdm
 import time
 from concurrent.futures import ThreadPoolExecutor
@@ -11,9 +12,9 @@ import concurrent.futures
 from prompt import generate_combined_prompts_one
 
 
-"""openai configure"""
-api_version = "2024-02-01"
-api_base = "https://gcrendpoint.azurewebsites.net"
+# """openai configure"""
+# api_version = "2024-02-01"
+# api_base = "https://gcrendpoint.azurewebsites.net"
 
 
 def new_directory(path):
@@ -88,14 +89,20 @@ def generate_sql_file(sql_lst, output_path=None):
     return result
 
 
-def init_client(api_key, api_version, engine):
-    """
-    Initialize the AzureOpenAI client for a worker.
-    """
-    return AzureOpenAI(
+# def init_client(api_key, api_version, engine):
+#     """
+#     Initialize the AzureOpenAI client for a worker.
+#     """
+#     return AzureOpenAI(
+#         api_key=api_key,
+#         api_version=api_version,
+#         base_url=f"{api_base}/openai/deployments/{engine}",
+#     )
+
+def init_client(api_key, api_base):
+    return OpenAI(
         api_key=api_key,
-        api_version=api_version,
-        base_url=f"{api_base}/openai/deployments/{engine}",
+        base_url=api_base,
     )
 
 
@@ -111,26 +118,71 @@ def worker_function(question_data):
     Function to process each question, set up the client,
     generate the prompt, and collect the GPT response.
     """
-    prompt, engine, client, db_path, question, i = question_data
-    response = connect_gpt(engine, prompt, 512, 0, ["--", "\n\n", ";", "#"], client)
+    # prompt, engine, client, db_path, question, i = question_data
+    prompt, engine, client, db_path, question, i, max_tokens = question_data
+    # response = connect_gpt(engine, prompt, 512, 0, ["--", "\n\n", ";", "#"], client)
+    response = connect_gpt(engine, prompt, max_tokens, 0, [], client)
     sql = post_process_response(response, db_path)
     print(f"Processed {i}th question: {question}")
     return sql, i
 
+
+# def collect_response_from_gpt(
+#     db_path_list,
+#     question_list,
+#     api_key,
+#     engine,
+#     sql_dialect,
+#     num_threads=3,
+#     knowledge_list=None,
+# ):
+#     """
+#     Collect responses from GPT using multiple threads.
+#     """
+#     client = init_client(api_key, api_version, engine)
+
+#     tasks = [
+#         (
+#             generate_combined_prompts_one(
+#                 db_path=db_path_list[i],
+#                 question=question_list[i],
+#                 sql_dialect=sql_dialect,
+#                 knowledge=knowledge_list[i],
+#             ),
+#             engine,
+#             client,
+#             db_path_list[i],
+#             question_list[i],
+#             i,
+#         )
+#         for i in range(len(question_list))
+#     ]
+#     responses = []
+#     with ThreadPoolExecutor(max_workers=num_threads) as executor:
+#         future_to_task = {
+#             executor.submit(worker_function, task): task for task in tasks
+#         }
+#         for future in tqdm(
+#             concurrent.futures.as_completed(future_to_task), total=len(tasks)
+#         ):
+#             responses.append(future.result())
+#     return responses
 
 def collect_response_from_gpt(
     db_path_list,
     question_list,
     api_key,
     engine,
+    api_base,
     sql_dialect,
     num_threads=3,
+    max_tokens=16384,
     knowledge_list=None,
 ):
     """
     Collect responses from GPT using multiple threads.
     """
-    client = init_client(api_key, api_version, engine)
+    client = init_client(api_key, api_base)
 
     tasks = [
         (
@@ -138,13 +190,15 @@ def collect_response_from_gpt(
                 db_path=db_path_list[i],
                 question=question_list[i],
                 sql_dialect=sql_dialect,
-                knowledge=knowledge_list[i],
+                # knowledge=knowledge_list[i],
+                knowledge=knowledge_list[i] if knowledge_list else None,
             ),
             engine,
             client,
             db_path_list[i],
             question_list[i],
             i,
+            max_tokens,
         )
         for i in range(len(question_list))
     ]
@@ -168,12 +222,14 @@ if __name__ == "__main__":
     args_parser.add_argument("--use_knowledge", type=str, default="False")
     args_parser.add_argument("--db_root_path", type=str, default="")
     args_parser.add_argument("--api_key", type=str, required=True)
+    args_parser.add_argument("--api_base", type=str, required=True)
     args_parser.add_argument(
         "--engine", type=str, required=True, default="code-davinci-002"
     )
     args_parser.add_argument("--data_output_path", type=str)
     args_parser.add_argument("--chain_of_thought", type=str)
     args_parser.add_argument("--num_processes", type=int, default=3)
+    args_parser.add_argument("--max_tokens", type=int, default=16384)
     args_parser.add_argument("--sql_dialect", type=str, default="SQLite")
     args = args_parser.parse_args()
 
@@ -190,8 +246,10 @@ if __name__ == "__main__":
             question_list,
             args.api_key,
             args.engine,
+            args.api_base,
             args.sql_dialect,
             args.num_processes,
+            args.max_tokens,
             knowledge_list,
         )
     else:
@@ -200,8 +258,10 @@ if __name__ == "__main__":
             question_list,
             args.api_key,
             args.engine,
+            args.api_base,
             args.sql_dialect,
             args.num_processes,
+            args.max_tokens,
         )
 
     if args.chain_of_thought == "True":

@@ -1,24 +1,16 @@
 # DO NOT CHANGE THIS
 # db_root_path='../sqlite/dev_databases/'
 db_root_path='../datasets/bird/dev/dev_databases/'
+# num_cpus=16
 num_cpus=4
 meta_time_out=30.0
 # DO NOT CHANGE THIS
 
-# MAC-SQL outputs predict_dev.json as a list of [question, sql_str] pairs.
-# evaluation_utils.package_sqls (mode='pred') calls .items(), so it expects a
-# dict {"idx": "sql_str\t----- bird -----\t<db_id>", ...}. Convert first.
-macsql_output_path='/root/autodl-tmp/workspace/kouan/MAC-SQL/outputs/bird_p1sub_Qwen3.6-35B-A3B/predict_dev.json'
-predicted_sql_path='/root/autodl-tmp/workspace/kouan/mini_dev/exp_result/p1_subset/predict_dev_macsql_bird_p1sub_Qwen3.6-35B-A3B_SQLite.json'
-python3 -c "
-import json
-with open('${macsql_output_path}') as f:
-    data = json.load(f)
-converted = {str(i): item[1] for i, item in enumerate(data)}
-with open('${predicted_sql_path}', 'w') as f:
-    json.dump(converted, f, indent=2, ensure_ascii=False)
-print(f'converted {len(converted)} MAC-SQL predictions -> ${predicted_sql_path}')
-"
+# ************************* #
+# predicted_sql_path='../sql_result/predict_mini_dev_gpt-4-32k_cot_SQLite.json' # Replace with your predict sql json path
+# predicted_sql_path='../sql_result/predict_mini_dev_gpt-4-32k_cot_PostgreSQL.json' # Replace with your predict sql json path
+# predicted_sql_path='../sql_result/predict_mini_dev_gpt-4-32k_cot_MySQL.json' # Replace with your predict sql json path
+predicted_sql_path='/home/linhx/workspace/kouan/MAC-SQL/outputs/bird_p1sub_Qwen3.6-35B-A3B/predict_dev_converted.json'
 
 sql_dialect="SQLite" # ONLY Modify this
 # sql_dialect="PostgreSQL" # ONLY Modify this
@@ -34,9 +26,9 @@ output_log_path="./eval_result/${base_name}.txt"
 case $sql_dialect in
   "SQLite")
     # diff_json_path="../sqlite/mini_dev_sqlite.jsonl"
-    diff_json_path="/root/autodl-tmp/workspace/kouan/datasets/bird/dev/p1_coded_fields_subset.jsonl"
+    diff_json_path="/home/linhx/workspace/kouan/datasets/bird/dev/p1_coded_fields_subset.jsonl"
     # ground_truth_path="../sqlite/mini_dev_sqlite_gold.sql"
-    ground_truth_path="/root/autodl-tmp/workspace/kouan/datasets/bird/dev/p1_coded_fields_subset_gold.sql"
+    ground_truth_path="/home/linhx/workspace/kouan/datasets/bird/dev/p1_coded_fields_subset_gold.sql"
     ;;
   "PostgreSQL")
     diff_json_path="../postgresql/mini_dev_postgresql.jsonl"
@@ -61,6 +53,7 @@ echo "Ground Truth Path: $ground_truth_path"
 
 
 echo "starting to compare with knowledge for ex, sql_dialect: ${sql_dialect}"
+# python3 -u ./evaluation_ex.py --db_root_path ${db_root_path} --predicted_sql_path ${predicted_sql_path}  \
 python3 -u ./evaluation/evaluation_ex.py --db_root_path ${db_root_path} --predicted_sql_path ${predicted_sql_path}  \
 --ground_truth_path ${ground_truth_path} --num_cpus ${num_cpus} --output_log_path ${output_log_path} \
 --diff_json_path ${diff_json_path} --meta_time_out ${meta_time_out}  --sql_dialect ${sql_dialect}

@@ -96,7 +96,8 @@ def package_sqls(
         sqls = open(sql_path)
         sql_txt = sqls.readlines()
         for idx, sql_str in enumerate(sql_txt):
-            sql, db_name = sql_str.strip().split("\t")
+            # sql, db_name = sql_str.strip().split("\t")
+            sql, db_name = sql_str.strip().rsplit(maxsplit=1)
             clean_sqls.append(sql)
             db_path_list.append(db_root_path + db_name + "/" + db_name + ".sqlite")
 

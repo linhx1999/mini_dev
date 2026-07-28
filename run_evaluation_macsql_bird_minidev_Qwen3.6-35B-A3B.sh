@@ -1,6 +1,6 @@
 # DO NOT CHANGE THIS
 # db_root_path='../sqlite/dev_databases/'
-db_root_path='../datasets/bird/dev/dev_databases/'
+db_root_path='../datasets/bird/MINIDEV/dev_databases/'
 # num_cpus=16
 num_cpus=16
 meta_time_out=30.0
@@ -10,7 +10,7 @@ meta_time_out=30.0
 # predicted_sql_path='../sql_result/predict_mini_dev_gpt-4-32k_cot_SQLite.json' # Replace with your predict sql json path
 # predicted_sql_path='../sql_result/predict_mini_dev_gpt-4-32k_cot_PostgreSQL.json' # Replace with your predict sql json path
 # predicted_sql_path='../sql_result/predict_mini_dev_gpt-4-32k_cot_MySQL.json' # Replace with your predict sql json path
-predicted_sql_path='../MAC-SQL/outputs/macsql_bird_dev_qwen3.6-35b-a3b/macsql_bird_dev_Qwen3.6-35B-A3B_predict_dev_converted.json'
+predicted_sql_path='../MAC-SQL/outputs/macsql_bird_minidev_Qwen3.6-35B-A3B/macsql_bird_minidev_Qwen3.6-35B-A3B_converted.json'
 
 sql_dialect="SQLite" # ONLY Modify this
 # sql_dialect="PostgreSQL" # ONLY Modify this
@@ -26,9 +26,9 @@ output_log_path="./eval_result/${base_name}.txt"
 case $sql_dialect in
   "SQLite")
     # diff_json_path="../sqlite/mini_dev_sqlite.jsonl"
-    diff_json_path="../datasets/bird/dev/dev.jsonl"
+    diff_json_path="../datasets/bird/MINIDEV/mini_dev_sqlite.jsonl"
     # ground_truth_path="../sqlite/mini_dev_sqlite_gold.sql"
-    ground_truth_path="../datasets/bird/dev/dev.sql"
+    ground_truth_path="../datasets/bird/MINIDEV/mini_dev_sqlite_gold.sql"
     ;;
   "PostgreSQL")
     diff_json_path="../postgresql/mini_dev_postgresql.jsonl"

@@ -4,7 +4,7 @@ db_root_path='../datasets/bird/dev/dev_databases/'
 num_cpus=4
 meta_time_out=30.0
 
-predicted_sql_path='/home/linhx/workspace/kouan/mini_dev/exp_result/turbo_output/predict_dev_Qwen3.6-35B-A3B_SQLite_direct.json' # Replace with your predict sql json path
+predicted_sql_path='exp_result/turbo_output/direct_predict_bird_dev_Qwen3.6-35B-A3B_SQLite.json' # Replace with your predict sql json path
 
 sql_dialect="SQLite" # ONLY Modify this
 # sql_dialect="PostgreSQL" # ONLY Modify this

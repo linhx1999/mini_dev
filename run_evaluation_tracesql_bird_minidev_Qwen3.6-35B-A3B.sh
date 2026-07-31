@@ -10,7 +10,7 @@ meta_time_out=30.0
 # predicted_sql_path='../sql_result/predict_mini_dev_gpt-4-32k_cot_SQLite.json' # Replace with your predict sql json path
 # predicted_sql_path='../sql_result/predict_mini_dev_gpt-4-32k_cot_PostgreSQL.json' # Replace with your predict sql json path
 # predicted_sql_path='../sql_result/predict_mini_dev_gpt-4-32k_cot_MySQL.json' # Replace with your predict sql json path
-predicted_sql_path='../TRACE-SQL/outputs/trace-sql_bird_minidev_qwen3.6-35b-a3b/trace-sql_bird_minidev_qwen3.6-35b-a3b_predict_dev.json'
+predicted_sql_path='../TRACE-SQL/outputs/trace-sql_bird_minidev_qwen3.6-35b-a3b_flat/trace-sql_bird_minidev_qwen3.6-35b-a3b_predict_dev.json'
 
 sql_dialect="SQLite" # ONLY Modify this
 # sql_dialect="PostgreSQL" # ONLY Modify this

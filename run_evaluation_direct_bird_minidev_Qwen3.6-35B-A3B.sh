@@ -1,7 +1,7 @@
 # DO NOT CHANGE THIS
 # db_root_path='../sqlite/dev_databases/'
 db_root_path='../datasets/bird/dev/dev_databases/'
-num_cpus=4
+num_cpus=16
 meta_time_out=30.0
 # DO NOT CHANGE THIS
 

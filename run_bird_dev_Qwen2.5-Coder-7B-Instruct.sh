@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-eval_path='../datasets/bird/dev/dev.json'
-db_root_path='../bird/dev/dev_databases/'
+eval_path='/root/autodl-tmp/workspace/kouan/datasets/bird/dev/dev.json'
+db_root_path='/root/autodl-tmp/workspace/kouan/datasets/bird/dev/dev_databases/'
 use_knowledge='False'
 mode='dev'  # dev, train, mini_dev
 cot='False'

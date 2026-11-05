@@ -1,16 +1,18 @@
 #!/usr/bin/env bash
 
-eval_path='/root/autodl-tmp/workspace/kouan/datasets/bird/dev/dev.json'
-db_root_path='/root/autodl-tmp/workspace/kouan/datasets/bird/dev/dev_databases/'
+eval_path='/root/autodl-tmp/workspace/kouan/SAGE-SQL/datasets/bird/dev/dev.json'
+db_root_path='/root/autodl-tmp/workspace/kouan/SAGE-SQL/datasets/bird/dev/dev_databases/'
 use_knowledge='False'
 mode='dev'  # dev, train, mini_dev
 cot='False'
 sql_dialect='SQLite'
 data_output_path='./exp_result/turbo_output/'
 
-api_base=http://127.0.0.1:8001/v1
+api_base=http://127.0.0.1:8004/v1
 api_key=EMPTY
-engine='Qwen3.5-9B'
+engine='Qwen3.6-35B-A3B'
+# engine='Qwen2.5-Coder-7B-Instruct'
+# engine='Qwen3.5-9B'
 
 num_threads=4
 max_tokens=16384

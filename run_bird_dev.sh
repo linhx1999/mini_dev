@@ -13,6 +13,7 @@ api_key=EMPTY
 engine='Qwen3.6-35B-A3B'
 # engine='Qwen2.5-Coder-7B-Instruct'
 # engine='Qwen3.5-9B'
+# engine="Ministral-3-14B-Reasoning-2512"
 
 num_threads=4
 max_tokens=16384

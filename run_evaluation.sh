@@ -2,7 +2,7 @@
 # db_root_path='../sqlite/dev_databases/'
 db_root_path='../datasets/bird/minidev/dev_databases/'
 num_cpus=16
-meta_time_out=30.0
+meta_time_out=60.0
 # DO NOT CHANGE THIS
 
 # ************************* #
@@ -67,6 +67,7 @@ python3 -u ./evaluation/evaluation_ves.py --db_root_path ${db_root_path} --predi
 
 
 # echo "starting to compare with knowledge for soft-f1, sql_dialect: ${sql_dialect}"
+# python3 -u ./evaluation_f1.py --db_root_path ${db_root_path} --predicted_sql_path ${predicted_sql_path}  \
 python3 -u ./evaluation/evaluation_f1.py --db_root_path ${db_root_path} --predicted_sql_path ${predicted_sql_path}  \
 --ground_truth_path ${ground_truth_path} --num_cpus ${num_cpus}  --output_log_path ${output_log_path} \
 --diff_json_path ${diff_json_path} --meta_time_out ${meta_time_out}   --sql_dialect ${sql_dialect}
